@@ -19,29 +19,27 @@ class Line:
         self.points = []
 
     def compute_length(self) -> float:
-        # Calculates the length of the line
         return abs(math.sqrt((self.end.x - self.start.x) ** 2 + (self.end.y - self.start.y) ** 2))
 
     def compute_slope(self) -> float:
-        # Computes the slope of the line in degrees
         slope_in_radians = math.atan2(abs(self.end.y - self.start.y), abs(self.end.x - self.start.x))
         slope_in_degrees = (slope_in_radians * 180) / math.pi
         return slope_in_degrees
 
     def compute_horizontal_cross(self) -> bool:
-        # Checks if the line crosses the horizontal axis
+        # Check if the line crosses the horizontal axis
         condition1 = self.start.y * self.end.y < 0
         condition2 = self.start.y == 0 or self.end.y == 0
         return condition1 or condition2
 
     def compute_vertical_cross(self) -> bool:
-        # Checks if the line crosses the vertical axis
+        # Check if the line crosses the vertical axis
         condition1 = self.start.x * self.end.x < 0
         condition2 = self.start.x == 0 or self.end.x == 0
         return condition1 or condition2
 
     def discretize_line(self, n: int):
-        # Generates n spaced points along the line
+        # Generate n spaced points along the line
         self.points.clear()
 
         # Calculate the distance between points
@@ -117,29 +115,29 @@ class Rectangle:
 
 ### Ejemplo de uso
 ``` python
-# Defines the corners of the rectangle
+# Define the corners of the rectangle
 point1 = Point(0, 0)
 point2 = Point(4, 0)
 point3 = Point(4, 2)
 point4 = Point(0, 2)
 
-# Defines the sides of the rectangle
+# Define the sides of the rectangle
 line1 = Line(point1, point2)
 line2 = Line(point2, point3)
 line3 = Line(point3, point4)
 line4 = Line(point4, point1)
 
-# Discretizes line and display points
+# Discretize line and display points
 print("Points on the line:")
 line1.discretize_line(3)
 
-# Displays line properties
+# Display line properties
 print("Line length:", line1.compute_length())
 print("Line slope:", line1.compute_slope())
 print("Crosses the horizontal axis?:", line1.compute_horizontal_cross())
 print("Crosses the vertical axis?:", line1.compute_vertical_cross())
 
-# Creates rectangle using the lines 
+# Create a rectangle using the lines 
 rectangle = Rectangle(4, line1, line2, line3, line4)
 print(f"Rectangle center: ({rectangle.center.x}, {rectangle.center.y})")
 ```
