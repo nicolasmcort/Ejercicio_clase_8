@@ -1,6 +1,6 @@
 # Ejercicio_clase_8
 
-Este código define clases para representar puntos, líneas y rectángulos en un plano cartesiano. La clase `Point` almacena las coordenadas 𝑥 y y, mientras que la clase `Line` calcula algunas propiedades como su longitud, pendiente y si cruza los ejes horizontales y/o verticales. La clase `Rectangle` permite crear un rectángulo de diferentes maneras (por ejemplo, con coordenadas de esquinas o líneas). El código incluye funciones para discretizar una línea en puntos. 
+Este código define clases para representar puntos, líneas y rectángulos. La clase `Point` almacena las coordenadas 𝑥 y y, mientras que la clase `Line` calcula algunas propiedades como su longitud, pendiente y si cruza los ejes horizontales y verticales. La clase `Rectangle` permite crear un rectángulo de diferentes maneras (por ejemplo, con coordenadas de esquinas o líneas). Además, el código incluye una función para discretizar una línea en puntos. 
 
 ``` python
 import math
@@ -19,27 +19,23 @@ class Line:
         self.points = []
 
     def compute_length(self) -> float:
-        return abs(math.sqrt((self.end.x - self.start.x) ** 2 + (self.end.y - self.start.y) ** 2))
+        self.length = math.sqrt((self.end.x - self.start.x) ** 2 + (self.end.y - self.start.y) ** 2)
+        return self.length
 
     def compute_slope(self) -> float:
         slope_in_radians = math.atan2(abs(self.end.y - self.start.y), abs(self.end.x - self.start.x))
-        slope_in_degrees = (slope_in_radians * 180) / math.pi
-        return slope_in_degrees
+        self.slope = (slope_in_radians * 180) / math.pi # Convert to degrees
+        return self.slope
 
     def compute_horizontal_cross(self) -> bool:
-        # Check if the line crosses the horizontal axis
-        condition1 = self.start.y * self.end.y < 0
-        condition2 = self.start.y == 0 or self.end.y == 0
-        return condition1 or condition2
+        # Returns True if the points are on opposite sides or are on the horizontal axis
+        return self.start.y * self.end.y <= 0
 
     def compute_vertical_cross(self) -> bool:
-        # Check if the line crosses the vertical axis
-        condition1 = self.start.x * self.end.x < 0
-        condition2 = self.start.x == 0 or self.end.x == 0
-        return condition1 or condition2
+        # Returns True if the points are on opposite sides or are on the vertical axis
+        return self.start.x * self.end.x <= 0
 
     def discretize_line(self, n: int):
-        # Generate n spaced points along the line
         self.points.clear()
 
         # Calculate the distance between points
@@ -71,7 +67,6 @@ class Rectangle:
             # Determine the vertical and horizontal lines
             vertical_lines = []
             horizontal_lines = []
-
             for line in args:
                 slope = line.compute_slope()
                 if slope == 90:
@@ -81,39 +76,21 @@ class Rectangle:
 
             # Validate that there are 2 vertical lines and 2 horizontal lines
             if len(vertical_lines) != 2 or len(horizontal_lines) != 2:
-                print("The rectangle must have 2 vertical and 2 horizontal lines")
-                print(vertical_lines, horizontal_lines)
+                raise ValueError("There must be 4 lines")
 
-            # Check if the lines are perpendicular
-            for vertical in vertical_lines:
-                is_perpendicular = False
-                for horizontal in horizontal_lines:
-                    if vertical.compute_slope() == 90 and horizontal.compute_slope() == 0:
-                        is_perpendicular = True
-                        break
-                if not is_perpendicular:
-                    print("The vertical lines are not perpendicular to the horizontal lines")
+            # Sort vertical and horizontal lines by their coordinates
+            vertical_lines.sort(key=lambda l: min(l.start.x, l.end.x))
+            horizontal_lines.sort(key=lambda l: min(l.start.y, l.end.y))
 
-            # Check that the point coordinates match between the lines
-            bottom_left_x = min(vertical_lines[0].start.x, vertical_lines[1].start.x)
-            bottom_left_y = min(horizontal_lines[0].start.y, horizontal_lines[1].start.y)
-            upper_right_x = max(vertical_lines[0].end.x, vertical_lines[1].end.x)
-            upper_right_y = max(horizontal_lines[0].end.y, horizontal_lines[1].end.y)
+            # Ensure the lines intersect correctly
+            x_condition = vertical_lines[0].start.x == horizontal_lines[0].start.x or vertical_lines[0].start.x == horizontal_lines[0].end.x
+            y_condition = vertical_lines[1].end.y == horizontal_lines[1].start.y or vertical_lines[1].end.y == horizontal_lines[1].end.y
 
-            # Verify that the coordinates of the points of intersection match
-            condition1 = (bottom_left_x == horizontal_lines[0].start.x and bottom_left_y == vertical_lines[0].start.y)
-            condition2 = (upper_right_x == horizontal_lines[1].end.x and upper_right_y == vertical_lines[1].end.y)
-            if not condition1 and not condition2:
-                print("The coordinates of the intersection points do not match.")
-
-            self.bottom_left = Point(bottom_left_x, bottom_left_y)
-            self.upper_right = Point(upper_right_x, upper_right_y)
-            self.width = self.upper_right.x - self.bottom_left.x
-            self.height = self.upper_right.y - self.bottom_left.y
-            self.center = Point(self.bottom_left.x + self.width / 2, self.bottom_left.y + self.height / 2)
+            if not x_condition or not y_condition:
+                raise ValueError("The coordinates of the intersection points do not match")
 ```
 
-### Ejemplo de uso
+### Ejemplo de uso 1 (rectángulo construido correctamente)
 ``` python
 # Define the corners of the rectangle
 point1 = Point(0, 0)
@@ -122,10 +99,10 @@ point3 = Point(4, 2)
 point4 = Point(0, 2)
 
 # Define the sides of the rectangle
-line1 = Line(point1, point2)
+line1 = Line(point4, point3)
 line2 = Line(point2, point3)
-line3 = Line(point3, point4)
-line4 = Line(point4, point1)
+line3 = Line(point1, point4)
+line4 = Line(point1, point2)
 
 # Discretize line and display points
 print("Points on the line:")
@@ -138,10 +115,40 @@ print("Crosses the horizontal axis?:", line1.compute_horizontal_cross())
 print("Crosses the vertical axis?:", line1.compute_vertical_cross())
 
 # Create a rectangle using the lines 
-rectangle = Rectangle(4, line1, line2, line3, line4)
-print(f"Rectangle center: ({rectangle.center.x}, {rectangle.center.y})")
+rectangle = Rectangle(4, line1, line4, line2, line3)
 ```
 
 ### Output
-![image](https://github.com/user-attachments/assets/22cbe505-c728-413c-b7d6-48728fc3c333)
+Points on the line:
+Points: (0.0, 2.0)
+Points: (2.0, 2.0)
+Points: (4.0, 2.0)
+Line length: 4.0
+Line slope: 0.0
+Crosses the horizontal axis?: False
+Crosses the vertical axis?: True
+
+
+### Ejemplo de uso 2 (Error al construir el rectángulo)
+``` python
+point1 = Point(0, 0)
+point2 = Point(2, 0)
+point3 = Point(5, 0)
+point4 = Point(5, 2)
+point5 = Point(3, 2)
+point6 = Point(0, 2)
+
+line1 = Line(point1, point6)
+line2 = Line(point2, point3)
+line3 = Line(point3, point4)
+line4 = Line(point5, point6)
+
+# Create a rectangle using the lines 
+rectangle = Rectangle(4, line1, line4, line2, line3)
+```
+
+### Output
+ValueError: The coordinates of the intersection points do not match"
+
+
 
