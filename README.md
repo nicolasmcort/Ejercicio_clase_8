@@ -89,7 +89,8 @@ class Rectangle:
             if not x_condition or not y_condition:
                 raise ValueError("The coordinates of the intersection points do not match")
 ```
-___
+***
+
 ### Ejemplo de uso 1 (rectángulo construido correctamente)
 ``` python
 # Define the corners of the rectangle
