@@ -1,6 +1,6 @@
 # Ejercicio_clase_8
 
-Este código define clases para representar puntos, líneas y rectángulos. La clase `Point` almacena las coordenadas 𝑥 y y, mientras que la clase `Line` calcula algunas propiedades como su longitud, pendiente y si cruza los ejes horizontales y verticales. La clase `Rectangle` permite crear un rectángulo de diferentes maneras (por ejemplo, con coordenadas de esquinas o líneas). Además, el código incluye una función para discretizar una línea en puntos. 
+Este código define clases para representar puntos, líneas y rectángulos. La clase `Point` almacena las coordenadas 𝑥 y y, mientras que la clase `Line` calcula algunas propiedades como su longitud, pendiente y si cruza los ejes horizontales y verticales. La clase `Rectangle` permite crear un rectángulo de diferentes maneras (por ejemplo, con coordenadas de esquinas o líneas). En el caso de que el rectángulo se construya utilizando líneas, estas deben ser paralelas a los ejes coordenados. Adicionalmente, el código incluye una función para discretizar una línea en puntos. 
 
 ``` python
 import math
