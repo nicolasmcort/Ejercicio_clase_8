@@ -160,7 +160,7 @@ rectangle = Rectangle(4, line1, line4, line2, line3)
 ```
 
 ### Output
-ValueError: The coordinates of the intersection points do not match"
+ValueError: The coordinates of the intersection points do not match
 
 
 
