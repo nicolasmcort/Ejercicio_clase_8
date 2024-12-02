@@ -120,12 +120,19 @@ rectangle = Rectangle(4, line1, line4, line2, line3)
 
 ### Output
 Points on the line:
+
 Points: (0.0, 2.0)
+
 Points: (2.0, 2.0)
+
 Points: (4.0, 2.0)
+
 Line length: 4.0
+
 Line slope: 0.0
+
 Crosses the horizontal axis?: False
+
 Crosses the vertical axis?: True
 
 
