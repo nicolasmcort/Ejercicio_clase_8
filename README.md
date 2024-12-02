@@ -89,7 +89,9 @@ class Rectangle:
             if not x_condition or not y_condition:
                 raise ValueError("The coordinates of the intersection points do not match")
 ```
+
 ***
+
 
 ### Ejemplo de uso 1 (rectángulo construido correctamente)
 ``` python
@@ -136,7 +138,9 @@ Crosses the horizontal axis?: False
 
 Crosses the vertical axis?: True
 
-___
+***
+
+
 ### Ejemplo de uso 2 (Error al construir el rectángulo)
 ``` python
 point1 = Point(0, 0)
